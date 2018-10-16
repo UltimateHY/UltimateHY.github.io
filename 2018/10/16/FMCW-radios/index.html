@@ -85,15 +85,19 @@
 <meta property="og:url" content="http://yoursite.com/2018/10/16/FMCW-radios/index.html">
 <meta property="og:site_name" content="HY&#39;s Blog">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://res.cloudinary.com/ultimatehy/image/upload/v1539614046/Blog/FMCW%20radios/FWCW_operation.png">
+<meta property="og:image" content="https://res.cloudinary.com/ultimatehy/image/upload/v1539673736/Blog/FMCW%20radios/FWCW_cover.png">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/c/cf/Linear-chirp.svg">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/a/af/LinearChirpMatlab.png">
 <meta property="og:image" content="https://res.cloudinary.com/ultimatehy/image/upload/v1539614046/Blog/FMCW%20radios/FWCW_operation.png">
+<meta property="og:image" content="http://chart.googleapis.com/chart?cht=tx&chl=\Large TOF = \frac{\Delta f}{slope}.">
+<meta property="og:image" content="http://chart.googleapis.com/chart?cht=tx&chl=\Large Resolution = C \frac{TOF_{min}}{2} = C \frac{\Delta f_{min}}{2*slope} = C \frac{1}{2*slope*T},">
+<meta property="og:image" content="http://chart.googleapis.com/chart?cht=tx&chl=\Large Resolution = \frac{C}{2*B}.">
+<meta property="og:image" content="http://chart.googleapis.com/chart?cht=tx&chl=\Large distance = C * TOF = C * \frac{\Delta f}{slope}.">
 <meta property="og:image" content="https://res.cloudinary.com/ultimatehy/image/upload/v1539671488/Blog/FMCW%20radios/TOF_to_Ellipse.png">
-<meta property="og:updated_time" content="2018-10-16T07:04:59.937Z">
+<meta property="og:updated_time" content="2018-10-16T07:30:48.961Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="FMCW radios">
-<meta name="twitter:image" content="https://res.cloudinary.com/ultimatehy/image/upload/v1539614046/Blog/FMCW%20radios/FWCW_operation.png">
+<meta name="twitter:image" content="https://res.cloudinary.com/ultimatehy/image/upload/v1539673736/Blog/FMCW%20radios/FWCW_cover.png">
 
 
 
@@ -345,7 +349,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T15:04:59+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T15:30:48+08:00">
                 2018-10-16
               </time>
             
@@ -403,28 +407,33 @@
       
         <p class="description"></p>
 
-<p><img src="https://res.cloudinary.com/ultimatehy/image/upload/v1539614046/Blog/FMCW%20radios/FWCW_operation.png" alt="" style="width:100%"></p>
+<p><img src="https://res.cloudinary.com/ultimatehy/image/upload/v1539673736/Blog/FMCW%20radios/FWCW_cover.png" alt="" style="width:100%"></p>
 <a id="more"></a>
-<p><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><br></script></p>
-<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><strong>FMCW</strong> (Frequency Modulated Carrier Waves) 是一种常见的测量无线信号<strong>TOF</strong>(Time of Flight)的方法，进一步其可用于测量信号收发系统与反射物体之间的相对距离。FMCW的核心思想是利用<strong>chirp</strong>信号（也就是扫频信号<strong>sweep signal</strong>）中<strong>频率与时间的线性关系</strong>，将接收与发送信号之间频差与接收信号的TOF对应起来，从而得到对无线信号TOF的估计。这里的内容主要是从<a href="https://en.wikipedia.org/wiki/Chirp" target="_blank" rel="noopener">wikipedia</a>以及MIT Dina Katabi组的两篇工作<a href="https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-adib.pdf" target="_blank" rel="noopener">WiTrack</a>和<a href="https://www.usenix.org/system/files/conference/nsdi15/nsdi15-paper-adib.pdf" target="_blank" rel="noopener">WiTrack2.0</a>中总结出来的\( \Delta f \)。</p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><strong>FMCW</strong> (Frequency Modulated Carrier Waves) 是一种常见的测量无线信号<strong>TOF</strong>(Time of Flight)的方法，进一步其可用于测量信号收发系统与反射物体之间的相对距离。FMCW的核心思想是利用<strong>chirp</strong>信号（也就是扫频信号<strong>sweep signal</strong>）中<strong>频率与时间的线性关系</strong>，将接收与发送信号之间的频差与接收信号的TOF对应起来，从而得到对无线信号TOF的估计。这里的内容主要是从<a href="https://en.wikipedia.org/wiki/Chirp" target="_blank" rel="noopener">wikipedia</a>以及MIT Dina Katabi组的两篇工作<a href="https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-adib.pdf" target="_blank" rel="noopener">WiTrack</a>和<a href="https://www.usenix.org/system/files/conference/nsdi15/nsdi15-paper-adib.pdf" target="_blank" rel="noopener">WiTrack2.0</a>中总结出来的。</p>
 <h1 id="Chirp"><a href="#Chirp" class="headerlink" title="Chirp"></a>Chirp</h1><p>Chirp是<strong>频率</strong>随着<strong>时间</strong>增长(<strong>up-chirp</strong>)或者减弱(<strong>down-chirp</strong>)的信号。Chirp一般也被称为<strong>sweep signal</strong>(扫频信号)。这种技术被广泛应用在声纳、雷达和激光中。</p>
 <p>chirp一般有两种，这里的chirp指的是<strong>liner chirp</strong>,一种是<strong>exponential chirp</strong>。这里主要介绍liner chirp，同时全文中其他处的chirp皆指liner chirp。liner chirp顾名思义就是<strong>频率随着时间线性变化的信号</strong>。下两个图示例了chirp信号在时域图和时频图。</p>
-<div align="center"><br><img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Linear-chirp.svg" width="400"><br></div>
+<div align="center"><br><img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Linear-chirp.svg" width="500"><br></div>
 
 <div align="center"><br><img src="https://upload.wikimedia.org/wikipedia/commons/a/af/LinearChirpMatlab.png" width="500"><br></div>
 
-<p>在实际的工程应用中，chirp是一个周期信号，其频率会在一个固定的周期长度T和一个指定的频段内线性变化，这个变化的过程称为<strong>sweep</strong>。对于无线（电）信号而言，T可以是很小的时间段。因为，无线信号是以光速传播的，所以即使T是毫秒(ms)级的，其一秒的传播距离也有几百公里。而一般的无线电信号在空气中的能量衰落十分严重，使其有效的传播距离只有不到一千米。所以，在chirp信号中<strong>不用考虑一个频差对应多个距离</strong>的问题。</p>
+<p>在实际的工程应用中，chirp是一个周期信号，其频率会在一个固定的周期长度<em>T</em>和一个指定的频段<em>B</em>内线性变化，这个变化的过程称为<strong>sweep</strong>。对于无线（电）信号而言，<em>T</em>可以是很小的时间段。因为，无线信号是以光速传播的，所以即使<em>T</em>是毫秒(ms)级的，其一秒的传播距离也有几百公里。而一般的无线电信号在空气中的能量衰落十分严重，使其有效的传播距离只有不到一千米。所以，在chirp信号中<strong>不用考虑一个频差对应多个距离</strong>的问题。</p>
 <h1 id="Estimating-TOF"><a href="#Estimating-TOF" class="headerlink" title="Estimating TOF"></a>Estimating TOF</h1><p>Chirp信号可用于测量接收信号的<strong>TOF</strong>。</p>
 <p>为了便于说明，这里首先说明空间中只有一个反射物体的场景。在这种场景下，系统在任意时刻只会有一个接收信号。一般地，FMCW系统发送的chirp是一个<strong>窄带信号</strong>（一般带宽为几KHz）。为了确定接收信号的TOF（或者说<strong>时延</strong>），FMCW需要将接收信号的载波频率与发送信号的载波频率作比较。因为信号的频率与时间之间的线性关系，接收信号的时延会与接收信号与发射信号之间的频差形成线性的对应关系。所以，只要计算出接收信号与发送信号之间的频差就可以算出接收信号对应的时延，也就是要估计的TOF。下图将上述的过程展示了出来。</p>
-<div align="center"><br><img src="https://res.cloudinary.com/ultimatehy/image/upload/v1539614046/Blog/FMCW%20radios/FWCW_operation.png" width="600"><br></div><br>从上图可以很容易地得到信号的TOF是频差$ \Delta f $与chirp信号坡度的比值<br><div align="center"><br><br>$$ TOF = \frac{\Delta f}{slope}。 $$<br></div>
+<div align="center"><br><img src="https://res.cloudinary.com/ultimatehy/image/upload/v1539614046/Blog/FMCW%20radios/FWCW_operation.png" width="600"><br></div><br>从上图可以很容易地得到信号的TOF是频差与chirp信号坡度的比值<br><br><div align="center"><br><img src="http://chart.googleapis.com/chart?cht=tx&chl=\Large TOF = \frac{\Delta f}{slope}." style="border:none;"><br></div>
+
 
 <p>虽然以上的说明针对的是一个反射物体的场景，但也适用于存在多个反射物体的场景中。因为<strong>无线反射信号在传播介质（空气）中是线性叠加的，所以接收到的信号是多个反射信号的线性组合</strong>，而每一个反射信号就对应于一个TOF。因此，我们可以通过对接收信号做FFT，提取出这些TOF出来。</p>
-<h1 id="Resolution-of-FMCW-radios"><a href="#Resolution-of-FMCW-radios" class="headerlink" title="Resolution of FMCW radios"></a>Resolution of FMCW radios</h1><p>FMCW系统的分辨率只依赖于chirp信号的带宽。这里的<strong>分辨率</strong>定义为系统能分别出两个相近位置的能力。对于FMCW系统而言，其分辨率由能够识别出不同的TOF的能力决定，也就是分辨发送信号与接收信号之间频差的能力。<strong>能识别的最小频差等于FFT中的频率分辨率</strong>。一般地，对chirp信号进行处理的时候，一次FFT的时间长度去取为一个扫频周期T，所以能识别的最小频差为1/T，那么能测量的最小距离，即分辨率为</p>
-<div align="center"><br><br>$$ Resolution = C \frac{TOF_{min}}{2} = C \frac{\Delta f_{min}}{2<em>slope} = C \frac{1}{2</em>slope<em>T}, $$<br></em></div><br>其中C代表光速，分母中的因子2表示反射信号经过了一个往返的收发端的过程。<br><br>考虑到梯度slope等于扫频带宽B与扫频周期T的比值，所以上述的公式可以化简为<br><div align="center"><br><br>$$ Resolution = \frac{C}{2B}。 $$<br></div>
+<h1 id="Resolution-of-FMCW-radios"><a href="#Resolution-of-FMCW-radios" class="headerlink" title="Resolution of FMCW radios"></a>Resolution of FMCW radios</h1><p>FMCW系统的分辨率只依赖于chirp信号的带宽<em>B</em>。这里的<strong>分辨率</strong>定义为系统能区别开两个相近位置的能力。对于FMCW系统而言，其分辨率由能够识别出不同的TOF的能力决定，也就是分辨发送信号与接收信号之间频差的能力。<strong>能识别的最小频差等于FFT中的频率分辨率</strong>。一般地，对chirp信号进行处理的时候，一次FFT的时间长度去取为一个扫频周期<em>T</em>，所以能识别的最小频差为<em>1/T</em>，那么能测量的最小距离，即分辨率为</p>
+<div align="center"><br><img src="http://chart.googleapis.com/chart?cht=tx&chl=\Large Resolution = C \frac{TOF_{min}}{2} = C \frac{\Delta f_{min}}{2*slope} = C \frac{1}{2*slope*T}," style="border:none;"><br></div>
+
+<p>其中<em>C</em>代表光速，分母中的因子2表示反射信号经过了一个往返收发端的过程。</p>
+<p>考虑到梯度<em>slope</em>等于扫频带宽<em>B</em>与扫频周期<em>T</em>的比值，所以上述的公式可以化简为</p>
+<div align="center"><br><img src="http://chart.googleapis.com/chart?cht=tx&chl=\Large Resolution = \frac{C}{2*B}." style="border:none;"><br></div>
+
 
 <p>根据上式所示，<strong>FMCW的分辨率随着扫频带宽的增加而提高</strong>。因为光速特别的大，所以为了获得一个高分辨率，就需要一个大的扫频带宽。比如说，WiTrack采用了1.69Hz(5.56GHz-7.25GHz)的带宽，得到的系统理论分辨率为8.8cm。</p>
-<h1 id="Mapping-TOFs-to-distances"><a href="#Mapping-TOFs-to-distances" class="headerlink" title="Mapping TOFs to distances"></a>Mapping TOFs to distances</h1><p>因为TOF是信号从发射天线出发再进过物体反射回到接收天线的时间，所以我们可以通过将TOF与光速C相乘，就能得到对应的信号的往返距离(<strong>round-trip distance</strong>)</p>
-<div align="center"><br><br>$$ distance = C <em> TOF = C </em> \frac{\Delta f}{slope}。 $$<br></div><br>知道了往返距离，那么就可把人或者物体定位到一个以发送和接收天线为焦点的椭圆形上某些位置。<br><div align="center"><br><img src="https://res.cloudinary.com/ultimatehy/image/upload/v1539671488/Blog/FMCW%20radios/TOF_to_Ellipse.png" width="300"><br></div>
+<h1 id="Mapping-TOFs-to-distances"><a href="#Mapping-TOFs-to-distances" class="headerlink" title="Mapping TOFs to distances"></a>Mapping TOFs to distances</h1><p>因为TOF代表的是信号从发射天线出发再经过物体反射回到接收天线的时间长度，所以我们可以通过将TOF与光速<em>C</em>相乘，就能得到对应信号的往返距离(<strong>round-trip distance</strong>)</p>
+<div align="center"><br><img src="http://chart.googleapis.com/chart?cht=tx&chl=\Large distance = C * TOF = C * \frac{\Delta f}{slope}." style="border:none;"><br></div><br>知道了往返距离，那么就可把人或者物体定位到一个以发送和接收天线为焦点的椭圆形上某些位置。<br><div align="center"><br><img src="https://res.cloudinary.com/ultimatehy/image/upload/v1539671488/Blog/FMCW%20radios/TOF_to_Ellipse.png" width="400"><br></div>
 
 
       

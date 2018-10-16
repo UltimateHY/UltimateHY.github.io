@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[FMCW radios]]></title>
+    <url>%2F2018%2F10%2F16%2FFMCW-radios%2F</url>
+    <content type="text"><![CDATA[IntroductionFMCW (Frequency Modulated Carrier Waves) 是一种常见的测量无线信号TOF(Time of Flight)的方法，进一步其可用于测量信号收发系统与反射物体之间的相对距离。FMCW的核心思想是利用chirp信号（也就是扫频信号sweep signal）中频率与时间的线性关系，将接收与发送信号之间频差与接收信号的TOF对应起来，从而得到对无线信号TOF的估计。这里的内容主要是从wikipedia以及MIT Dina Katabi组的两篇工作WiTrack和WiTrack2.0中总结出来的\( \Delta f \)。 ChirpChirp是频率随着时间增长(up-chirp)或者减弱(down-chirp)的信号。Chirp一般也被称为sweep signal(扫频信号)。这种技术被广泛应用在声纳、雷达和激光中。 chirp一般有两种，这里的chirp指的是liner chirp,一种是exponential chirp。这里主要介绍liner chirp，同时全文中其他处的chirp皆指liner chirp。liner chirp顾名思义就是频率随着时间线性变化的信号。下两个图示例了chirp信号在时域图和时频图。 在实际的工程应用中，chirp是一个周期信号，其频率会在一个固定的周期长度T和一个指定的频段内线性变化，这个变化的过程称为sweep。对于无线（电）信号而言，T可以是很小的时间段。因为，无线信号是以光速传播的，所以即使T是毫秒(ms)级的，其一秒的传播距离也有几百公里。而一般的无线电信号在空气中的能量衰落十分严重，使其有效的传播距离只有不到一千米。所以，在chirp信号中不用考虑一个频差对应多个距离的问题。 Estimating TOFChirp信号可用于测量接收信号的TOF。 为了便于说明，这里首先说明空间中只有一个反射物体的场景。在这种场景下，系统在任意时刻只会有一个接收信号。一般地，FMCW系统发送的chirp是一个窄带信号（一般带宽为几KHz）。为了确定接收信号的TOF（或者说时延），FMCW需要将接收信号的载波频率与发送信号的载波频率作比较。因为信号的频率与时间之间的线性关系，接收信号的时延会与接收信号与发射信号之间的频差形成线性的对应关系。所以，只要计算出接收信号与发送信号之间的频差就可以算出接收信号对应的时延，也就是要估计的TOF。下图将上述的过程展示了出来。 从上图可以很容易地得到信号的TOF是频差$ \Delta f $与chirp信号坡度的比值$$ TOF = \frac{\Delta f}{slope}。 $$ 虽然以上的说明针对的是一个反射物体的场景，但也适用于存在多个反射物体的场景中。因为无线反射信号在传播介质（空气）中是线性叠加的，所以接收到的信号是多个反射信号的线性组合，而每一个反射信号就对应于一个TOF。因此，我们可以通过对接收信号做FFT，提取出这些TOF出来。 Resolution of FMCW radiosFMCW系统的分辨率只依赖于chirp信号的带宽。这里的分辨率定义为系统能分别出两个相近位置的能力。对于FMCW系统而言，其分辨率由能够识别出不同的TOF的能力决定，也就是分辨发送信号与接收信号之间频差的能力。能识别的最小频差等于FFT中的频率分辨率。一般地，对chirp信号进行处理的时候，一次FFT的时间长度去取为一个扫频周期T，所以能识别的最小频差为1/T，那么能测量的最小距离，即分辨率为 $$ Resolution = C \frac{TOF_{min}}{2} = C \frac{\Delta f_{min}}{2slope} = C \frac{1}{2slopeT}, $$其中C代表光速，分母中的因子2表示反射信号经过了一个往返的收发端的过程。考虑到梯度slope等于扫频带宽B与扫频周期T的比值，所以上述的公式可以化简为$$ Resolution = \frac{C}{2B}。 $$ 根据上式所示，FMCW的分辨率随着扫频带宽的增加而提高。因为光速特别的大，所以为了获得一个高分辨率，就需要一个大的扫频带宽。比如说，WiTrack采用了1.69Hz(5.56GHz-7.25GHz)的带宽，得到的系统理论分辨率为8.8cm。 Mapping TOFs to distances因为TOF是信号从发射天线出发再进过物体反射回到接收天线的时间，所以我们可以通过将TOF与光速C相乘，就能得到对应的信号的往返距离(round-trip distance) $$ distance = C TOF = C \frac{\Delta f}{slope}。 $$知道了往返距离，那么就可把人或者物体定位到一个以发送和接收天线为焦点的椭圆形上某些位置。]]></content>
+      <categories>
+        <category>communications</category>
+      </categories>
+      <tags>
+        <tag>FMCW</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Motion Dump Cutting]]></title>
     <url>%2F2018%2F10%2F04%2FMotion-Dump-Cutting%2F</url>
     <content type="text"><![CDATA[前言这里介绍一下Motion Dump Cutting，是在进攻时handler需要用到的跑位方法。这是我观看了Rise Up的视频 – motion dump cutting 后总结出来的。按照我现在的理解，这是在飞盘静止的情况下handler跑动接应持盘人需要用到的。下面简单地说明四种具体的handler跑位方法。 方法先给出一个总的知识图谱。 Get low at the attack pointhandler往持盘人的方向跑，在attack point时把身体的重心降低，再变向，加速。因为，一般在比赛中，防守人是处于被动的位置（后知后觉），进攻者的事先准备能够便于摆脱防守人。 Slide to loosen the defenderhandler在attack point之前先滑步(slide)向前，再到attack point之后降低重心、变向。handler这样做可以让防守人更难阅读你的进攻状态，所以让你更容易摆脱。 Adjust line to gain more space在防守人贴得比较近的情况下，handler向前或向后移动，为向反方向跑动赢得更多的加速空间。 Drop step back to regain attack position when trapped当handler和持盘人距离很近的时候，防守人很难被摔开(trapped)。在这种情况下，handler就需要往远离持盘人的方向回撤一下，到距离合适之后再变向、加速、摆脱。 后记 利用上面的方法，handler可以根据当时的情况，决定是往前接upline，还是往后接swing。 这四种方法之间没有什么优先级。同时，每次跑位也不一定选择某一种，而可以在一次跑位中搭配使用。具体的使用，全靠handler根据当时的情况灵活选择。 attack point与持盘人的距离很重要。一般是来说不同的handler会有不同的距离选择，但原则上这个距离要便于自己摆脱防守人。 上面的图像内容并非原创。感谢Rise Up拍摄的视频，让我学习到更多的飞盘知识。]]></content>
